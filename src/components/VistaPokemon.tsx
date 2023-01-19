@@ -1,7 +1,7 @@
 import React, { useEffect} from "react";
 import { useQuery } from "react-query";
 import { getPokemon} from "../queries/pokemon.queries";
-import {Pokemon, PokemonWithProps} from "../types/pokemon.types";
+import {Pokemon} from "../types/pokemon.types";
 
 
 interface IVista {

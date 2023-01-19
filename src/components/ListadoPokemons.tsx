@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import ListadoPokemonsItem from "../components/ListadoPokemonsItem";
 import {buscarPokemons} from "../queries/pokemon.queries";
 import {Pokemon} from "../types/pokemon.types";
