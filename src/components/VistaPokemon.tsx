@@ -1,40 +1,40 @@
-import React from "react";
-import PropTypes from "prop-types";
-import {PokemonWithProps} from "../types/pokemon.types";
-import {Sprite} from "../types/sprite.types";
+import React, { useEffect} from "react";
+import { useQuery } from "react-query";
+import { getPokemon} from "../queries/pokemon.queries";
+import {Pokemon, PokemonWithProps} from "../types/pokemon.types";
 
-const charmander: PokemonWithProps = {
-    id: 4,
-    name: 'Charmander',
-    url: 'https://pokeapi.co/api/v2/pokemon/4/',
-    sprites: {
-        "default": 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png',
-        other: {home: {front_default: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/4.png'}}
-    } as Sprite
 
+interface IVista {
+    pokemonSeleccionado: Pokemon | null
 }
 
-const VistaPokemon = () => {
+/**
+ * Visualiza un pokemon seleccionado
+ *
+ * @param {string} pokemonSeleccionado pokemon almacenado con la funcion seleccionarPokemon
+ * @author Digital House
+ */
 
-    // Obtener el pokemon seleccionado de redux utililando el hook selector y luego utilizar
-    // la api que retorna la informacion de este pokemon.
-    // Ah no olvides aprovechar una herramienta como React Query para facilitar el acceso!
+const VistaPokemon = ({pokemonSeleccionado}: IVista) => {
+    const {data: pokemon, isLoading, refetch} = useQuery("obtenerPokemon",() => getPokemon(pokemonSeleccionado?.name || ""),);
 
-    return charmander ? (
+    useEffect(() => {   
+        if (pokemonSeleccionado) {
+            refetch();
+        }
+    }, [refetch, pokemonSeleccionado])
+
+    if (!pokemonSeleccionado) return <></>;
+    if (isLoading) return <div>Cargando pokemon...</div>
+
+    return pokemon ? (
         <div className="vistaPokemon">
-            <h4>Pokemon: {charmander.name}</h4>
-            <h5>#{charmander.id}</h5>
-            <img src={charmander.sprites.other.home.front_default} />
+            <h4>Pokemon: {pokemon.name}</h4>
+            <h5>#{pokemon.id}</h5>
+            <img src={pokemon.sprites.other.home.front_default} alt={pokemon.name}/>
         </div>
     ): null;
 }
 
-VistaPokemon.propTypes = {
-    item:
-        PropTypes.shape({
-            name: PropTypes.string.isRequired,
-            url: PropTypes.string.isRequired,
-        })
-};
 
 export default VistaPokemon;
